@@ -49,6 +49,21 @@ async function run() {
       res.send(result);
   })
 
+  app.get("/review/check", async (req, res) => {
+  const { email, productId } = req.query;
+
+  const query = {
+    reviewerEmail: email,
+    productId: productId,
+  };
+
+  const existingReview = await reviewCollection.findOne(query);
+
+  res.send({
+    alreadyReviewed: !!existingReview,
+  });
+});
+
 
 
 
@@ -191,7 +206,7 @@ async function run() {
       const query = {
         product_status: "Accepted" 
       };
-        const result = await featuredCollection.find(query).sort({ Vote: -1 }).limit(6).toArray();
+        const result = await featuredCollection.find(query).limit(6).toArray();
         res.send(result);
     })
 
@@ -265,109 +280,7 @@ async function run() {
         res.send(result);
       })
 
-      //products voteUpdate
-      app.patch('/featureds/voteProducts/:id', async(req,res)=>{
-        const item = req.body;
-        //console.log(item);
-        const Vote= item.UpVote;
-        const id = req.params.id;
-        const filter = {_id: new ObjectId(id)};
-        const updatedDoc = {
-          
-          $set: {
-             
-             email: item.email,
-             
-            //  UpVote: {...item.UpVote},
-            
-          },
-          $inc: { Vote: 1 } ,
-          
-        }
-        //console.log(UpVote);
-        const result = await featuredCollection.updateOne(filter, updatedDoc,{upsert: true});
-        res.send(result);
-      })
-
-
-
-      //Feature voteUpdate
-      app.patch('/featured/voteSort/:id', async(req,res)=>{
-        const item = req.body;
-        //console.log(item);
-        const Vote= item.UpVote;
-        const id = req.params.id;
-        const filter = {_id: new ObjectId(id)};
-        const updatedDoc = {
-          
-          $set: {
-             
-             email: item.email,
-             
-            //  UpVote: {...item.UpVote},
-            
-          },
-          $inc: { Vote: 1 } ,
-          
-        }
-        //console.log(UpVote);
-        const result = await featuredCollection.updateOne(filter, updatedDoc,{upsert: true});
-        res.send(result);
-      })
-
-
-
-
-
-      //Feature voteUpdate
-      app.patch('/featured/voteFeature/:id', async(req,res)=>{
-        const item = req.body;
-        //console.log(item);
-        const Vote= item.UpVote;
-        const id = req.params.id;
-        const filter = {_id: new ObjectId(id)};
-        const updatedDoc = {
-          
-          $set: {
-             
-             email: item.email,
-             
-            //  UpVote: {...item.UpVote},
-            
-          },
-          $inc: { Vote: 1 } ,
-          
-        }
-        //console.log(UpVote);
-        const result = await featuredCollection.updateOne(filter, updatedDoc,{upsert: true});
-        res.send(result);
-      })
-
-
-
-      //Details voteUpdate
-      app.patch('/featured/vote/:id', async(req,res)=>{
-        const item = req.body;
-        //console.log(item);
-        const Vote= item.UpVote;
-        const id = req.params.id;
-        const filter = {_id: new ObjectId(id)};
-        const updatedDoc = {
-          $inc: { Vote: 1 } ,
-          $set: {
-             
-             email: item.email,
-             
-            //  UpVote: {...item.UpVote},
-            
-          },
-          
-        }
-        //console.log(UpVote);
-        const result = await featuredCollection.updateOne(filter, updatedDoc,{upsert: true});
-        res.send(result);
-      })
-
+  
 
       //accept------------------------------------------------
       app.patch('/featured/accept/:id', async(req,res)=>{
