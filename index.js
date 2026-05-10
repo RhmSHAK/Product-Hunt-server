@@ -206,7 +206,7 @@ async function run() {
       const query = {
         product_status: "Accepted" 
       };
-        const result = await featuredCollection.find(query).limit(6).toArray();
+        const result = await featuredCollection.find(query).limit(8).toArray();
         res.send(result);
     })
 
